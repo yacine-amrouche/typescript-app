@@ -6,6 +6,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
 import { useMemo } from "react";
 import { v4 as uuidV4 } from "uuid";
+import { NoteList } from "./NoteList";
 
 export type Note = {
   id: string;
@@ -13,9 +14,9 @@ export type Note = {
 export type NoteData = {
   title: string;
   markDown: string;
-  tags: tag[];
+  tags: Tag[];
 };
-export type tag = {
+export type Tag = {
   id: string;
   label: string;
 };
@@ -29,7 +30,7 @@ export type RawNoteData = {
 };
 function App() {
   const [notes, setNotes] = useLocalStorage<RowNote[]>("NOTES", []);
-  const [tags, setTags] = useLocalStorage<tag[]>("TAGS", []);
+  const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
   const notesWTags = useMemo(() => {
     return notes.map((note) => {
       return {
@@ -46,12 +47,24 @@ function App() {
       ];
     });
   }
+  function addtag(tag: Tag) {
+    setTags((prev) => [...prev, tag]);
+  }
 
   return (
     <Container className="my-4">
       <Routes>
-        <Route path="/" element={<h1>Home</h1>} />
-        <Route path="/new" element={<NewNote onSubmit={onCreateNote} />} />
+        <Route path="/" element={<NoteList availableTags={tags} />} />
+        <Route
+          path="/new"
+          element={
+            <NewNote
+              onSubmit={onCreateNote}
+              onAddTag={addtag}
+              availableTags={tags}
+            />
+          }
+        />
         <Route path="*" element={<Navigate to="/" />} />
         <Route path="/:id">
           <Route index element={<h1>Show</h1>} />
