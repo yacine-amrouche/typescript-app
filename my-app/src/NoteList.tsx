@@ -19,7 +19,7 @@ export function NoteList({ availableTags }: NoteListProps) {
         <Col>
           <Stack gap={2} direction="horizontal">
             <Link to="/new">
-              <Button variant="primary">Create</Button>
+              <Button variant="primary">Create New Tag</Button>
             </Link>
             <Button variant="outline-secondary">Edit Tags</Button>
           </Stack>
